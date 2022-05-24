@@ -1,11 +1,14 @@
+from crypt import methods
+import json
 import pymysql
 from app import app
 from config import mysql
-from flask import jsonify
-from flask import request
+from flask import jsonify, request
 from auth import auth_required
+import requests
 
-@app.route('/create', methods=['POST'])
+
+@app.route('/create', methods=['POST']) #rota para criar cadastro de cliente
 @auth_required
 def create_clientes():
     try:        
@@ -34,7 +37,7 @@ def create_clientes():
         cursor.close() 
         conn.close()          
      
-@app.route('/cadastro')
+@app.route('/cadastro') #rota para buscar lista de clientes cadastrados
 @auth_required
 def cadastro():
     try:
@@ -51,14 +54,14 @@ def cadastro():
         cursor.close() 
         conn.close()  
 
-@app.route('/cadastro/<int:id>')
+@app.route('/cadastro/<int:id>') #rota para buscar cadastro de cliente por id
 @auth_required
 def cadastro_detail(id):
     try:
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute("SELECT id, nome, email, cpf, telefone, idade FROM cadastro WHERE id =%s", id)
-        cadRow = cursor.fetchone()
+        cadRow = cursor.fetchall()
         response = jsonify(cadRow)
         response.status_code = 200
         return response
@@ -68,7 +71,35 @@ def cadastro_detail(id):
         cursor.close() 
         conn.close() 
 
-@app.route('/update', methods=['PUT'])
+@app.route('/cadastro/endereco/<int:id>') #rota que busca informações de cliente e seus endereços, pelo ID do cliente
+def cadastro_endereco(id): 
+    
+    url = requests.get('http://127.0.0.1:5001/endereco', auth=('username', '8080')) #url que busca as informações de endereço, com a autenticação
+    
+    text = url.text
+    data = json.loads(text) #transforma os dados buscados em json
+    
+
+    lista = [] #lista para unir todos os endereços encontrados em data
+    for endereco in data:
+        if endereco['id_cliente'] == id:
+            lista.append(endereco) #adiciona na lista de informações do cliente, o endereço
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("SELECT * FROM cadastro WHERE id=%s", id) #seleciona as informações do cliente 
+        cadRow = cursor.fetchall()
+        response = jsonify(cadRow, lista) #une os dados do cliente pegos pelo cursor na lista
+        response.status_code = 200
+        return response
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()    
+
+
+@app.route('/update', methods=['PUT']) #rota para atualizar informações de cadastro
 @auth_required
 def update_cadastro():
     try:
@@ -79,7 +110,7 @@ def update_cadastro():
         _cpf = _json['cpf']
         _telefone = _json['telefone']	
         _idade = _json['idade']        
-        if _nome and _email and _cpf and _telefone and _idade and id and request.method == 'PUT':			
+        if _nome and _email and _cpf and _telefone and _idade and _id and request.method == 'PUT':			
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
             sqlQuery = "UPDATE cadastro SET nome=%s, email=%s, cpf=%s, telefone=%s, idade=%s WHERE id=%s"
@@ -98,7 +129,7 @@ def update_cadastro():
         cursor.close() 
         conn.close() 
 
-@app.route('/delete/<int:id>', methods=['DELETE'])
+@app.route('/delete/<int:id>', methods=['DELETE']) #rota para deleter cliente por id
 @auth_required
 def delete_cadastro(id):
 	try:
@@ -126,4 +157,4 @@ def showMessage(error=None):
     return response
         
 if (__name__ == "__main__"):
-    app.run()
+    app.run(port=5002, debug=True)

@@ -1,8 +1,7 @@
 from app import app
 from config import mysql
 import pymysql
-from flask import jsonify
-from flask import request
+from flask import jsonify, request
 from auth import auth_required
 
 
@@ -17,11 +16,12 @@ def create_endereco():
         _cidade = _json['cidade']
         _estado = _json['estado']
         _cep = _json['cep']
-        if _rua and _numero and _bairro and _cidade and _estado and _cep and request.method == 'POST':
+        _id_cliente = _json['id_cliente']
+        if _rua and _numero and _bairro and _cidade and _estado and _cep and _id_cliente and request.method == 'POST':
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
-            sqlQuery = "INSERT INTO endereco (rua, numero, bairro, cidade, estado, cep) VALUES(%s, %s, %s, %s, %s, %s)"
-            bindData = (_rua, _numero, _bairro, _cidade, _estado, _cep)
+            sqlQuery = "INSERT INTO endereco (rua, numero, bairro, cidade, estado, cep, id_cliente) VALUES(%s, %s, %s, %s, %s, %s, %s)"
+            bindData = (_rua, _numero, _bairro, _cidade, _estado, _cep, _id_cliente)
             cursor.execute(sqlQuery, bindData)
             conn.commit()
             response = jsonify('Endereço cadastrado com sucesso!')
@@ -43,24 +43,25 @@ def endereco_list():
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute("SELECT * FROM endereco") #seleciona todos as informações da tabela
-        endRows = cursor.fetchall()
-        response = jsonify(endRows)
+        endRow = cursor.fetchall()
+        response = jsonify(endRow)
         response.status_code = 200
         return response
     except Exception as e:
-        print(e)
+        response = jsonify({"Message": f"{e}"})
+        return response
     finally:
         cursor.close() 
         conn.close()  
 
-@app.route('/endereco/<int:id>') #rota de busca de endereço por id específico
+@app.route('/endereco/<int:id_end>') #rota de busca de endereço por id específico
 @auth_required
-def endereco_detail(id):
+def endereco_detail(id_end):
     try:
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT id, rua, numero, bairro, cidade, estado, cep FROM endereco WHERE id =%s", id)
-        endRow = cursor.fetchone()
+        cursor.execute("SELECT id_end, rua, numero, bairro, cidade, estado, cep, id_cliente FROM endereco WHERE id_end =%s", id_end)
+        endRow = cursor.fetchall()
         response = jsonify(endRow)
         response.status_code = 200
         return response
@@ -75,18 +76,19 @@ def endereco_detail(id):
 def update_endereco():
     try:
         _json = request.json  
-        _id = _json['id']      
+        _id_end = _json['id_end']      
         _rua = _json['rua']
         _numero = _json['numero']        
         _bairro = _json['bairro']
         _cidade = _json['cidade']	
         _estado = _json['estado']
         _cep = _json['cep']
-        if _rua and _numero and _bairro and _cidade and _estado and _cep and id and request.method == 'PUT':			
+        _id_cliente = _json['id_cliente']
+        if _rua and _numero and _bairro and _cidade and _estado and _cep and _id_cliente and _id_end and request.method == 'PUT':			
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
-            sqlQuery = "UPDATE endereco SET rua=%s, numero=%s, bairro=%s, cidade=%s, estado=%s, cep=%s WHERE id=%s"
-            bindData = (_rua, _numero, _bairro, _cidade, _estado, _cep, _id)            
+            sqlQuery = "UPDATE endereco SET rua=%s, numero=%s, bairro=%s, cidade=%s, estado=%s, cep=%s, id_cliente=%s WHERE id_end=%s"
+            bindData = (_rua, _numero, _bairro, _cidade, _estado, _cep, _id_cliente, _id_end)            
             cursor.execute(sqlQuery, bindData)
             conn.commit()
             response = jsonify('Endereço atualizado com sucesso!')
@@ -101,13 +103,13 @@ def update_endereco():
         cursor.close() 
         conn.close() 
 
-@app.route('/delete/<int:id>', methods=['DELETE']) #rota para deletar um endereço
+@app.route('/delete/<int:id_end>', methods=['DELETE']) #rota para deletar um endereço
 @auth_required
-def delete_endereco(id):
+def delete_endereco(id_end):
 	try:
 		conn = mysql.connect()
 		cursor = conn.cursor()
-		cursor.execute("DELETE FROM endereco WHERE id =%s", (id,))
+		cursor.execute("DELETE FROM endereco WHERE id_end =%s", (id_end))
 		conn.commit()
 		response = jsonify('Endereço deletado com sucesso!')
 		response.status_code = 200
