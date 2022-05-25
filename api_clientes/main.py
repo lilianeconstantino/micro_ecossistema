@@ -98,7 +98,6 @@ def cadastro_endereco(id):
         cursor.close()
         conn.close()    
 
-
 @app.route('/update', methods=['PUT']) #rota para atualizar informações de cadastro
 @auth_required
 def update_cadastro():

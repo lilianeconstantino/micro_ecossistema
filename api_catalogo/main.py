@@ -40,8 +40,8 @@ def produtos_list():
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute("SELECT * FROM catalogo") #seleciona todos as informações da tabela
-        endRow = cursor.fetchall()
-        response = jsonify(endRow)
+        catRow = cursor.fetchall()
+        response = jsonify(catRow)
         response.status_code = 200
         return response
     except Exception as e:
@@ -58,8 +58,8 @@ def produto_detail(id_produto):
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute("SELECT * FROM catalogo WHERE id_produto =%s", id_produto)
-        proRow = cursor.fetchall()
-        response = jsonify(proRow)
+        catRow = cursor.fetchall()
+        response = jsonify(catRow)
         response.status_code = 200
         return response
     except Exception as e:
