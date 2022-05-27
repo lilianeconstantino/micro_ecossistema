@@ -37,26 +37,31 @@ As REST APIs foram construídas utilizando a linguagem **Python**, com microfram
 ### Passo a passo:
 
 No diretório onde será criada cada API deve ser feito:
-Criar um abiente virtual:
-'''
+
+- Criar um abiente virtual:
+
+```
 python3 -m venv venv
 Ativar ambiente virtual:
 . venv/bin/activate
-'''
-Instalar módulos Flask:
-'''
+```
+- Instalar módulos Flask:
+
+```
 pip install Flask flask-mysql requests
 pip install pymysql
-'''
-Para rodar a aplicação:
-'''
+```
+- Para rodar a aplicação:
+
+```
 export FLASK_ENV=development
 export FLASK_APP=main
 flask run -p 5000 (cada API roda em um porta diferente)
-'''
+```
 
 **Os testes de requisições foram feitos no Postman**
 
-Fontes de tutorias:
-[Create RESTful API using Python & MySQL](https://webdamn.com/create-restful-api-using-python-mysql/)
-[Flask](https://flask.palletsprojects.com/en/2.1.x/quickstart/)
+Fontes:
+
+- [Create RESTful API using Python & MySQL](https://webdamn.com/create-restful-api-using-python-mysql/) 
+- [Flask](https://flask.palletsprojects.com/en/2.1.x/quickstart/)
