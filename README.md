@@ -61,7 +61,7 @@ flask run -p 5000 (cada API roda em um porta diferente)
 
 **Os testes de requisições foram feitos no Postman**
 
-Fontes:
+**Fontes:**
 
 - [Create RESTful API using Python & MySQL](https://webdamn.com/create-restful-api-using-python-mysql/) 
 - [Flask](https://flask.palletsprojects.com/en/2.1.x/quickstart/)
