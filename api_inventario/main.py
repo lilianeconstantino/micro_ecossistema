@@ -112,63 +112,48 @@ def delete_inventario(id_inventario):
 		cursor.close() 
 		conn.close()
 
-@app.route('/inventario/cadastro/<int:id_cliente>') 
-def cadastro_inventario(id_cliente): 
+@app.route('/inventario/produto/<int:id_cliente>') 
+@auth_required
+def inventario_complete(id_cliente): 
     
-    url = requests.get('http://127.0.0.1:5002/cadastro', auth=('username', '8080'))     
+    url = requests.get('http://127.0.0.1:5002/cadastro', auth=('username', '8080'))
     text = url.text
-    data = json.loads(text)       
+    data_cadastro = json.loads(text)        
+    
+    lista_cadastro = []     
+    for cadastro in data_cadastro:
+        if cadastro['id'] == id_cliente:
+            lista_cadastro.append(cadastro)         
+    
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT id_iproduto FROM inventario WHERE id_cliente=%s", id_cliente)        
+    ids = cursor.fetchall()
+    lista_id = []
+    lista = []     
+    for id in ids:
+        id_iproduto = id['id_iproduto']
+        lista_id.append(id_iproduto) 
 
-    lista = [] 
-    for inventario in data:
-        if inventario['id'] == id_cliente:
-            lista.append(inventario)      
+        r = requests.get('http://127.0.0.1:5003/produtos/'+str(id_iproduto), auth=('username', '8080'))         
+        produto_text = r.text
+        data_p = json.loads(produto_text)
+        lista.append(data_p)        
     try:
+        response = {}
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT * FROM inventario WHERE id_cliente=%s", id_cliente)         
+        cursor.execute("SELECT * FROM inventario WHERE id_cliente=%s", id_cliente)        
         invRow = cursor.fetchall()
-        response = jsonify(invRow, lista) 
-        response.status_code = 200
+        response['Inventário'] = invRow
+        response['Cliente'] = lista_cadastro
+        response['Produtos'] = lista    
         return response
     except Exception as e:
         print(e)
     finally:
         cursor.close()
-        conn.close()      
-
-# @app.route('/inventario/cadastro/produto<int:id_cliente>') 
-# def cadastro_inventario(id_cliente): 
-    
-#     url = requests.get('http://127.0.0.1:5002/cadastro', auth=('username', '8080'))     
-#     text = url.text
-#     data = json.loads(text) 
-
-#     url = requests.get('http://127.0.0.1:5003/produto', auth=('username', '8080'))     
-#     text = url.text
-#     data = json.loads(text)     
-
-#     lista = [] 
-#     for inventario in data:
-#         if inventario['id'] == id_cliente:
-#             lista.append(inventario) 
-    
-#         elif inventario['id_produto'] == id_iproduto:
-#             lista.append(inventario)   
-#     try:
-#         conn = mysql.connect()
-#         cursor = conn.cursor(pymysql.cursors.DictCursor)
-#         cursor.execute("SELECT * FROM inventario WHERE id_cliente=%s", id_cliente)  
-#         cursor.execute("SELECT * FROM inventario WHERE id_iproduto=%s", id_iproduto)
-#         invRow = cursor.fetchall()
-#         response = jsonify(invRow, lista) 
-#         response.status_code = 200
-#         return response
-#     except Exception as e:
-#         print(e)
-#     finally:
-#         cursor.close()
-#         conn.close()   
+        conn.close()   
 
 @app.errorhandler(404)
 def showMessage(error=None): #função que define mensagens de código de erro
