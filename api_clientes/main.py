@@ -4,11 +4,11 @@ import pymysql
 from app import app
 from config import mysql
 from flask import jsonify, request
-from auth import auth_required
 import requests
+from auth import auth_required
+from validacao import *
 
-
-@app.route('/create', methods=['POST']) #rota para criar cadastro de cliente
+@app.route('/cadastro', methods=['POST']) #rota para criar cadastro de cliente
 @auth_required
 def create_clientes():
     try:        
@@ -98,7 +98,7 @@ def cadastro_endereco(id):
         cursor.close()
         conn.close()    
 
-@app.route('/update', methods=['PUT']) #rota para atualizar informações de cadastro
+@app.route('/cadastro', methods=['PUT']) #rota para atualizar informações de cadastro
 @auth_required
 def update_cadastro():
     try:
@@ -111,10 +111,10 @@ def update_cadastro():
         _idade = _json['idade']        
         if _nome and _email and _cpf and _telefone and _idade and _id and request.method == 'PUT':			
             conn = mysql.connect()
-            cursor = conn.cursor(pymysql.cursors.DictCursor)
+            cursor = conn.cursor(pymysql.cursors.DictCursor)            
             sqlQuery = "UPDATE cadastro SET nome=%s, email=%s, cpf=%s, telefone=%s, idade=%s WHERE id=%s"
-            bindData = (_nome, _email, _cpf, _telefone, _idade, _id)            
-            cursor.execute(sqlQuery, bindData)
+            bindData = (_nome, _email, _cpf, _telefone, _idade, _id) 
+            cursor.execute(sqlQuery, bindData)            
             conn.commit()
             response = jsonify('Cliente atualizado com sucesso!')
             response.status_code = 200
@@ -128,7 +128,7 @@ def update_cadastro():
         cursor.close() 
         conn.close() 
 
-@app.route('/delete/<int:id>', methods=['DELETE']) #rota para deleter cliente por id
+@app.route('/cadastro/<int:id>', methods=['DELETE']) #rota para deleter cliente por id
 @auth_required
 def delete_cadastro(id):
 	try:

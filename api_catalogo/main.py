@@ -5,7 +5,7 @@ from flask import jsonify, request
 from auth import auth_required
 
 
-@app.route('/create', methods=['POST']) #rota para criar um novo produto
+@app.route('/produtos', methods=['POST']) #rota para criar um novo produto
 @auth_required
 def create_produto():    
     try:
@@ -68,7 +68,7 @@ def produto_detail(id_produto):
         cursor.close() 
         conn.close() 
 
-@app.route('/update', methods=['PUT']) #rota para atualizar um produto
+@app.route('/produtos', methods=['PUT']) #rota para atualizar um produto
 @auth_required
 def update_produto():
     try:
@@ -97,7 +97,7 @@ def update_produto():
         cursor.close() 
         conn.close() 
 
-@app.route('/delete/<int:id_produto>', methods=['DELETE']) #rota para deletar um produto
+@app.route('/produtos/<int:id_produto>', methods=['DELETE']) #rota para deletar um produto
 @auth_required
 def delete_produto(id_produto):
 	try:

@@ -7,7 +7,7 @@ import requests
 import json
 
 
-@app.route('/create', methods=['POST']) 
+@app.route('/inventario', methods=['POST']) 
 @auth_required
 def create_inventario():    
     try:
@@ -57,7 +57,7 @@ def inventario_detail(id_inventario):
     try:
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT id_inventario, id_iproduto, id_cliente FROM inventario WHERE id_inventario =%s", id_inventario)
+        cursor.execute("SELECT * FROM inventario WHERE id_inventario =%s", id_inventario)
         invRow = cursor.fetchall()
         response = jsonify(invRow)
         response.status_code = 200
@@ -68,7 +68,7 @@ def inventario_detail(id_inventario):
         cursor.close() 
         conn.close() 
 
-@app.route('/update', methods=['PUT']) 
+@app.route('/inventario', methods=['PUT']) 
 @auth_required
 def update_inventario():
     try:
@@ -95,7 +95,7 @@ def update_inventario():
         cursor.close() 
         conn.close() 
 
-@app.route('/delete/<int:id_inventario>', methods=['DELETE']) 
+@app.route('/inventario/<int:id_inventario>', methods=['DELETE']) 
 @auth_required
 def delete_inventario(id_inventario):
 	try:

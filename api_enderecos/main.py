@@ -5,7 +5,7 @@ from flask import jsonify, request
 from auth import auth_required
 
 
-@app.route('/create', methods=['POST']) #rota para criar um novo endereço
+@app.route('/endereco', methods=['POST']) #rota para criar um novo endereço
 @auth_required
 def create_endereco():    
     try:
@@ -71,7 +71,7 @@ def endereco_detail(id_end):
         cursor.close() 
         conn.close() 
 
-@app.route('/update', methods=['PUT']) #rota para atualizar um endereço
+@app.route('/endereco', methods=['PUT']) #rota para atualizar um endereço
 @auth_required
 def update_endereco():
     try:
@@ -103,7 +103,7 @@ def update_endereco():
         cursor.close() 
         conn.close() 
 
-@app.route('/delete/<int:id_end>', methods=['DELETE']) #rota para deletar um endereço
+@app.route('/endereco/<int:id_end>', methods=['DELETE']) #rota para deletar um endereço
 @auth_required
 def delete_endereco(id_end):
 	try:
