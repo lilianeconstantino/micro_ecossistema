@@ -54,13 +54,13 @@ def endereco_list():
         cursor.close() 
         conn.close()  
 
-@app.route('/endereco/<int:id_end>') #rota de busca de endereço por id específico
+@app.route('/endereco/<int:id_cliente>') #rota de busca de endereço por id específico
 @auth_required
-def endereco_detail(id_end):
+def endereco_detail(id_cliente):
     try:
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT id_end, rua, numero, bairro, cidade, estado, cep, id_cliente FROM endereco WHERE id_end =%s", id_end)
+        cursor.execute("SELECT id_cliente, rua, numero, bairro, cidade, estado, cep, id_end FROM endereco WHERE id_cliente =%s", id_cliente)
         endRow = cursor.fetchall()
         response = jsonify(endRow)
         response.status_code = 200
@@ -103,13 +103,13 @@ def update_endereco():
         cursor.close() 
         conn.close() 
 
-@app.route('/endereco/<int:id_end>', methods=['DELETE']) #rota para deletar um endereço
+@app.route('/endereco/cliente/<int:id_cliente>', methods=['DELETE']) #rota para deletar um endereço
 @auth_required
-def delete_endereco(id_end):
+def delete_endereco(id_cliente):
 	try:
 		conn = mysql.connect()
 		cursor = conn.cursor()
-		cursor.execute("DELETE FROM endereco WHERE id_end =%s", (id_end))
+		cursor.execute("DELETE FROM endereco WHERE id_cliente =%s", (id_cliente))
 		conn.commit()
 		response = jsonify('Endereço deletado com sucesso!')
 		response.status_code = 200

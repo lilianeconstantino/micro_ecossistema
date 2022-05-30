@@ -130,20 +130,22 @@ def update_cadastro():
 
 @app.route('/cadastro/<int:id>', methods=['DELETE']) #rota para deleter cliente por id
 @auth_required
-def delete_cadastro(id):
-	try:
-		conn = mysql.connect()
-		cursor = conn.cursor()
-		cursor.execute("DELETE FROM cadastro WHERE id =%s", (id,))
-		conn.commit()
-		response = jsonify('Cliente deletado com sucesso!')
-		response.status_code = 200
-		return response
-	except Exception as e:
-		print(e)
-	finally:
-		cursor.close() 
-		conn.close()        
+def delete_cadastro(id):    
+    try:
+        url = requests.delete('http://127.0.0.1:5001/endereco/cliente/'+str(id), auth=('username', '8080'))
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM cadastro WHERE id =%s", (id))
+        conn.commit()
+        response = url
+        response = jsonify('Cliente deletado com sucesso!')
+        response.status_code = 200
+        return response
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close() 
+        conn.close() 
        
 @app.errorhandler(404)
 def showMessage(error=None):

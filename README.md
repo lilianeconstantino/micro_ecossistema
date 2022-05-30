@@ -43,7 +43,7 @@ No diretório onde será criada cada API deve ser feito:
 ```
 python3 -m venv venv
 ```
--Ativar ambiente virtual:
+- Ativar ambiente virtual:
 ```
 . venv/bin/activate
 ```
