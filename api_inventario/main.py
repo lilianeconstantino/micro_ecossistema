@@ -79,8 +79,8 @@ def update_inventario():
         if _id_iproduto and _id_cliente and _id_inventario and request.method == 'PUT':			
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
-            sqlQuery = "UPDATE inventario SET _id_iproduto=%s, _id_cliente=%s WHERE id_inventario=%s"
-            bindData = (_id_inventario, _id_iproduto, _id_cliente)            
+            sqlQuery = "UPDATE inventario SET id_iproduto=%s, id_cliente=%s WHERE id_inventario=%s"
+            bindData = (_id_iproduto, _id_cliente, _id_inventario)            
             cursor.execute(sqlQuery, bindData)
             conn.commit()
             response = jsonify('Atualizado com sucesso!')
@@ -112,9 +112,63 @@ def delete_inventario(id_inventario):
 		cursor.close() 
 		conn.close()
 
-@app.route('/inventario/produto/<int:id_cliente>') 
+@app.route('/inventario/cadastro/<int:id_cliente>') 
 @auth_required
 def inventario_complete(id_cliente): 
+    
+    url = requests.get('http://127.0.0.1:5002/cadastro', auth=('username', '8080'))
+    text = url.text
+    data_cadastro = json.loads(text)        
+    
+    lista_cadastro = []     
+    for cadastro in data_cadastro:
+        if cadastro['id'] == id_cliente:
+            lista_cadastro.append(cadastro)    
+
+        url_e = requests.get('http://127.0.0.1:5001/endereco', auth=('username', '8080')) 
+        text = url_e.text
+        data_e = json.loads(text)        
+        lista_endereco = []     
+        for endereco in data_e:
+            if endereco['id_cliente'] == id_cliente:
+                lista_endereco.append(endereco)
+    
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT id_iproduto FROM inventario WHERE id_cliente=%s", id_cliente)        
+    ids = cursor.fetchall()
+    response = jsonify(lista_cadastro, lista_endereco)
+    lista_id = []
+    lista = []     
+    for id in ids:
+        id_iproduto = id['id_iproduto']
+        lista_id.append(id_iproduto) 
+
+        r = requests.get('http://127.0.0.1:5003/produtos/'+str(id_iproduto), auth=('username', '8080'))         
+        produto_text = r.text
+        data_p = json.loads(produto_text)
+        lista.append(data_p)   
+        
+    try:
+        response = {}
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("SELECT * FROM inventario WHERE id_cliente=%s", id_cliente)        
+        invRow = cursor.fetchall()
+        response['Inventário'] = invRow
+        response['Cliente'] = lista_cadastro
+        response['Endereços'] = lista_endereco 
+        response['Produtos'] = lista    
+        return response
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()   
+
+@app.route('/inventario/produto/<int:id_cliente>') 
+@auth_required
+def inventario_produto(id_cliente): 
     
     url = requests.get('http://127.0.0.1:5002/cadastro', auth=('username', '8080'))
     text = url.text

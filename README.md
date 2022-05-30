@@ -30,6 +30,7 @@ As REST APIs foram construídas utilizando a linguagem **Python**, com microfram
 - Cria o inventário
 - Lista todos os inventários cadastrados
 - Lista inventário com informações de cliente e produtos
+- Lista todas as informações do cliente por id (cadastro, endereço e produtos)
 - Busca inventário por id
 - Atualiza inventário
 - Exclui inventário
@@ -39,20 +40,19 @@ As REST APIs foram construídas utilizando a linguagem **Python**, com microfram
 No diretório onde será criada cada API deve ser feito:
 
 - Criar um abiente virtual:
-
 ```
 python3 -m venv venv
-Ativar ambiente virtual:
+```
+-Ativar ambiente virtual:
+```
 . venv/bin/activate
 ```
 - Instalar módulos Flask:
-
 ```
 pip install Flask flask-mysql requests
 pip install pymysql
 ```
 - Para rodar a aplicação:
-
 ```
 export FLASK_ENV=development
 export FLASK_APP=main
