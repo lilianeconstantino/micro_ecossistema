@@ -103,13 +103,30 @@ def update_endereco():
         cursor.close() 
         conn.close() 
 
-@app.route('/endereco/cliente/<int:id_cliente>', methods=['DELETE']) #rota para deletar um endereço
+@app.route('/endereco/cliente/<int:id_cliente>', methods=['DELETE']) #rota para deletar todos os endereços do cliente
 @auth_required
 def delete_endereco(id_cliente):
 	try:
 		conn = mysql.connect()
 		cursor = conn.cursor()
 		cursor.execute("DELETE FROM endereco WHERE id_cliente =%s", (id_cliente))
+		conn.commit()
+		response = jsonify('Endereço deletado com sucesso!')
+		response.status_code = 200
+		return response
+	except Exception as e:
+		print(e)
+	finally:
+		cursor.close() 
+		conn.close()
+
+@app.route('/endereco/<int:id_end>', methods=['DELETE']) #rota para deletar um endereço
+@auth_required
+def endereco_apagar(id_end):
+	try:
+		conn = mysql.connect()
+		cursor = conn.cursor()
+		cursor.execute("DELETE FROM endereco WHERE id_end =%s", (id_end))
 		conn.commit()
 		response = jsonify('Endereço deletado com sucesso!')
 		response.status_code = 200

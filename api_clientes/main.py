@@ -125,8 +125,9 @@ def update_cadastro():
         reponse = jsonify({"Message": f"{e}"})
         return reponse
     finally:
-        cursor.close() 
         conn.close() 
+        cursor.close() 
+        
 
 @app.route('/cadastro/<int:id>', methods=['DELETE']) #rota para deleter cliente por id
 @auth_required

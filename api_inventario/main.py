@@ -51,13 +51,13 @@ def inventario_list():
         cursor.close() 
         conn.close()  
 
-@app.route('/inventario/<int:id_inventario>') 
+@app.route('/inventario/<int:id_cliente>') 
 @auth_required
-def inventario_detail(id_inventario):
+def inventario_detail(id_cliente):
     try:
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT * FROM inventario WHERE id_inventario =%s", id_inventario)
+        cursor.execute("SELECT * FROM inventario WHERE id_cliente =%s", id_cliente)
         invRow = cursor.fetchall()
         response = jsonify(invRow)
         response.status_code = 200

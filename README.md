@@ -17,13 +17,14 @@ As REST APIs foram construídas utilizando a linguagem **Python**, com microfram
 ### Endereços
 - Cria o endereços de clientes
 - Lista todos os endereços cadastrados
-- Busca endereço por id
+- Busca endereço por id do cliente
 - Atualiza endereço
-- Exclui endereço
+- Exclui endereço específico
+- Eclui todos os endereços do cliente
 ### Catalágo de Produtos
 - Cria o produto
 - Lista todos os produtos cadastrados
-- Busca produto por id
+- Busca produto específico
 - Atualiza produto
 - Exclui produto
 ### Inventário
@@ -31,7 +32,7 @@ As REST APIs foram construídas utilizando a linguagem **Python**, com microfram
 - Lista todos os inventários cadastrados
 - Lista inventário com informações de cliente e produtos
 - Lista todas as informações do cliente por id (cadastro, endereço e produtos)
-- Busca inventário por id
+- Busca inventário por id do cliente
 - Atualiza inventário
 - Exclui inventário
 
