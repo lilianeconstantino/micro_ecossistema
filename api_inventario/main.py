@@ -220,4 +220,4 @@ def showMessage(error=None): #função que define mensagens de código de erro
     return response
 
 if (__name__ == "__main__"):
-    app.run(port=5004, debug=True) #informa em que porta a api deve rodar
+    app.run(port=5004, debug=True, host='0.0.0.0') #informa em que porta a api deve rodar
