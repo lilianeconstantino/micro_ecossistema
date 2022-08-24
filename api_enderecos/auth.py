@@ -15,4 +15,4 @@ def auth_required(f): #função que cria o nome do decorador e ativa a autentica
 
   
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
