@@ -4,6 +4,9 @@ import pymysql
 from flask import jsonify, request
 from auth import auth_required
 
+@app.route("/health")
+def health():
+    return
 
 @app.route('/produtos', methods=['POST']) #rota para criar um novo produto
 @auth_required

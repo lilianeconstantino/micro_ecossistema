@@ -8,6 +8,10 @@ import requests
 from auth import auth_required
 from validacao import *
 
+@app.route("/health")
+def health():
+    return
+
 @app.route('/cadastro', methods=['POST']) #rota para criar cadastro de cliente
 @auth_required
 def create_clientes():

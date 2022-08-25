@@ -68,6 +68,10 @@ def inventario_detail(id_cliente):
         cursor.close() 
         conn.close() 
 
+@app.route("/health")
+def health():
+    return
+
 @app.route('/inventario', methods=['PUT']) 
 @auth_required
 def update_inventario():

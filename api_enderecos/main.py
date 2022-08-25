@@ -4,6 +4,9 @@ import pymysql
 from flask import jsonify, request
 from auth import auth_required
 
+@app.route("/health")
+def health():
+    return
 
 @app.route('/endereco', methods=['POST']) #rota para criar um novo endereço
 @auth_required
