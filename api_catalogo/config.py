@@ -2,7 +2,7 @@ from app import app
 from flaskext.mysql import MySQL
 
 mysql = MySQL(app) #configuração para conexão com o banco de dados
-app.config['MYSQL_DATABASE_USER'] = 'liliane' 
+app.config['MYSQL_DATABASE_USER'] = 'admin' 
 app.config['MYSQL_DATABASE_PASSWORD'] = 'senhafortedb' 
 app.config['MYSQL_DATABASE_DB'] = 'catalogo_produtos' 
 app.config['MYSQL_DATABASE_HOST'] = 'database-cali.ckatnedhbqjh.us-east-2.rds.amazonaws.com' 
